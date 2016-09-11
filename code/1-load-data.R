@@ -139,8 +139,8 @@ data <- as.data.frame(data)
 datasp <-data[( data$.store.gps.longitude > 35.7270 &
                   data$.store.gps.longitude < 42.3850 &
                   data$.store.gps.latitude > 32.3106 &
-                  data$.store.gps.latitude < 37.3190 ), c(".store.gps.longitude", ".store.gps.latitude", "center",
-            "staff", "benef", "hardware", "centerdate", "organisation", "centerstatus", "internet" ,
+                  data$.store.gps.latitude < 37.3190 ), c(".store.gps.longitude", ".store.gps.latitude", "center","organisation","centerdate", 
+            "staff", "benef", "hardware",  "centerstatus", "internet" ,
             "caseload.Refugees" , "caseload.IDPs" ,  "caseload.Host",           
              "service.Remedial.Classes", "service.Child.Friendly.Spaces",
             "service.Legal.Assistance", "service.Awareness.Raising", "service.PSS.Individual" ,      
@@ -164,7 +164,10 @@ datasp <- as.data.frame(datasp)
 
 datalabel2 <- as.data.frame( names(datasp))
 names(datalabel2)[1]  <- "nameor2"
-datalabel2 <- join(x=datalabel2, y=datalabel, by="nameor2", type = "left")
+
+## Need to subset the recors where we have others
+datalabel1 <- datalabel[-c(74,54, 38), ] 
+datalabel2 <- join(x=datalabel2, y=datalabel1, by="nameor2", type = "left")
 attributes(datasp)$variable.labels <- datalabel2[, 8] 
 
 names(datasp)[1] <- "long"
@@ -182,6 +185,14 @@ for (i in 10:57 ) {
 ### Compute Ratio 
 datasp$ratio.staff.benef <- datasp$staff/datasp$benef
 datasp$ratio.hardware.staff <- datasp$hardware/datasp$staff
+
+## Let's remove duplicate in the records:
+datasp.beforeclean <- datasp
+
+## Duplicate Records fro Al-Jameeliyeh - record 34 & Near_Al_Abrasheyah (44 & 45)
+datasp <- datasp.beforeclean[!rownames(datasp.beforeclean) %in% c(34, 44, 45), ]
+
+write.csv(datasp, "data/data.sp.csv")
 
 #str(datasp)
 
@@ -223,6 +234,9 @@ areacom.unique <- as.data.frame(unique(areacom))
 names(area)
 
 area$id <- paste0("_index", "_parent_index", sep="" )
+
+
+rm(area, areacom, areacom.unique, arealabel, communities.unique, communities, subdistrict.unique, subdistrict, split.var)
 
 ## now get in a long format
 #for (i in 1:nrow(subdistrict.unique)) {

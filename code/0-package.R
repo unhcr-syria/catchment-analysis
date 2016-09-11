@@ -43,6 +43,7 @@
 library("labelled")
 
 library("ggplot2")
+library("ggrepel")
 library("RColorBrewer")
 library("directlabels")
 library("ggthemes")
