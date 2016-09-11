@@ -31,8 +31,8 @@
 ## Store my username and password in another file -- not shared on Github --
 # Format is "username:password" 
 
-library("koboloadeR")
-source("code/usernamepassword.R")
+#library("koboloadeR")
+#source("code/usernamepassword.R")
 
 
 ############################################

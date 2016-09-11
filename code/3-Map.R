@@ -90,7 +90,7 @@ centersyriastaff <- ggmap(googleterrainsyria) +
   geom_point(aes( x = long, y = lat, size = staff), data=datasp , alpha = 0.85,  color="#FFA600", fill="#FFA600")  +
   #Plot the voronoi lines
   #geom_segment( aes(x = x1, y = y1, xend = x2, yend = y2), size = 2, data = voronoi$dirsgs, linetype = 1, color= "#FFB958") + 
-  ggtitle("Community Centers in Syria") +
+  ggtitle("Community Centers in Syria - # of Staff") +
   theme(plot.title=element_text(face="bold", size=11),
         axis.title.x=element_blank(),
         axis.title.y=element_blank(),
@@ -105,7 +105,7 @@ centersyriabenef <- ggmap(googleterrainsyria) +
   geom_point(aes( x = long, y = lat, size = benef), data=datasp , alpha = 0.85,  color="#FFA600", fill="#FFA600")  +
   #Plot the voronoi lines
   #geom_segment( aes(x = x1, y = y1, xend = x2, yend = y2), size = 2, data = voronoi$dirsgs, linetype = 1, color= "#FFB958") + 
-  ggtitle("Community Centers in Syria") +
+  ggtitle("Community Centers in Syria - # of Beneficiaries") +
   theme(plot.title=element_text(face="bold", size=11),
         axis.title.x=element_blank(),
         axis.title.y=element_blank(),
@@ -119,7 +119,7 @@ centersyriahardware <- ggmap(googleterrainsyria) +
   geom_point(aes( x = long, y = lat, size = hardware), data=datasp , alpha = 0.85,  color="#FFA600", fill="#FFA600")  +
   #Plot the voronoi lines
   #geom_segment( aes(x = x1, y = y1, xend = x2, yend = y2), size = 2, data = voronoi$dirsgs, linetype = 1, color= "#FFB958") + 
-  ggtitle("Community Centers in Syria") +
+  ggtitle("Community Centers in Syria - # of Hardware") +
   theme(plot.title=element_text(face="bold", size=11),
         axis.title.x=element_blank(),
         axis.title.y=element_blank(),
@@ -133,7 +133,7 @@ centersyriastaffbenef <- ggmap(googleterrainsyria) +
   geom_point(aes( x = long, y = lat, size = ratio.staff.benef), data=datasp , alpha = 0.85,  color="#FFA600", fill="#FFA600")  +
   #Plot the voronoi lines
   #geom_segment( aes(x = x1, y = y1, xend = x2, yend = y2), size = 2, data = voronoi$dirsgs, linetype = 1, color= "#FFB958") + 
-  ggtitle("Community Centers in Syria") +
+  ggtitle("Community Centers in Syria - Ratio Staff / Benef") +
   theme(plot.title=element_text(face="bold", size=11),
         axis.title.x=element_blank(),
         axis.title.y=element_blank(),
@@ -147,7 +147,7 @@ centersyriahardwarestaff <- ggmap(googleterrainsyria) +
   geom_point(aes( x = long, y = lat, size = ratio.hardware.staff), data=datasp , alpha = 0.85,  color="#FFA600", fill="#FFA600")  +
   #Plot the voronoi lines
   #geom_segment( aes(x = x1, y = y1, xend = x2, yend = y2), size = 2, data = voronoi$dirsgs, linetype = 1, color= "#FFB958") + 
-  ggtitle("Community Centers in Syria") +
+  ggtitle("Community Centers in Syria - Ratio Hardware / Staff") +
   theme(plot.title=element_text(face="bold", size=11),
         axis.title.x=element_blank(),
         axis.title.y=element_blank(),

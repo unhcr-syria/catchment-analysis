@@ -55,6 +55,7 @@ rm(form_1,form_2,form_3,form_4,form_5,form_6)
 
 ###################################################################
 ### Bring Center description together
+rm(data)
 data <- rbind (form1loc,form2loc,form3loc,form4loc,form5loc,form6loc)
 rm(form1loc,form2loc,form3loc,form4loc,form5loc,form6loc)
 
@@ -71,26 +72,29 @@ rm(form1loc,form2loc,form3loc,form4loc,form5loc,form6loc)
 ## Load survey structure in XLS form
 form_tmp <- "data/Community_Centers_Catchment_Area1.xls"
 survey <- read_excel(form_tmp, sheet = "survey") 
-choices <- read_excel(form_tmp, sheet = "choices") 
 ## Avoid columns without names
-survey <- survey[ ,c("type",   "name" ,  "label::English", "label::Arabic" ,"hint::Arabic",               
-                     "hint::English", "relevant",  "required", "constraint",   "constraint_message::Arabic", 
-                     "constraint_message::English", "default",  "appearance", "calculation",  "read_only"  ,                
-                     "repeat_count")]
+#survey <- survey[ ,c("type",   "name" ,  "label::English", "label::Arabic" ,"hint::Arabic",   "hint::English", "relevant",  "required", "constraint",   "constraint_message::Arabic", 
+#                     "constraint_message::English", "default",  "appearance", "calculation",  "read_only" ,   "repeat_count")]
+
+survey <- survey[ ,c("type",   "name" ,  "label::English", "label::Arabic" ,"hint::Arabic",   "hint::English", "relevant",  "required", "constraint",   
+                     "constraint_message::English",   "appearance")]
+
 ## need to delete empty rows from the form
 survey <- survey[!is.na(survey$type), ] 
 
-survey_temp <- survey %>%
-  filter(!type %in% c("begin group", "end group", "note")) %>%
-  separate(type, into = c("q_type", "q_group"), sep = " ", fill = "right")
+#survey_temp <- survey %>%
+#  filter(!type %in% c("begin group", "end group", "note")) %>%
+#  separate(type, into = c("q_type", "q_group"), sep = " ", fill = "right")
 #names(survey_temp)
-survey_temp1 <- survey_temp[ ,c("q_type", "q_group" ,  "name" ,   "label::English")]
-names(survey_temp1)[4] <- "label"
+#survey_temp1 <- survey_temp[ ,c("q_type", "q_group" ,  "name" ,   "label::English")]
+survey_temp1 <- survey[ ,c( "name" ,   "label::English")]
+names(survey_temp1)[2] <- "label"
 survey_temp1 <- as.data.frame(survey_temp1)
 
 choices <- read_excel(form_tmp, sheet = "choices") 
 choices <- choices[ ,c( "name",   "label::English")]
 names(choices)[2] <- "label"
+choices1 <- unique(choices)
 
 ##################################################
 ## get variable name from data
@@ -107,9 +111,10 @@ datalabel$find <- regexpr(".",datalabel$namenew, fixed = TRUE, useBytes = TRUE)
 datalabel$nameor2 <- substr(datalabel$namenew,datalabel$find+1, 200)
 datalabel$find2 <- regexpr(".",datalabel$nameor2, fixed = TRUE, useBytes = TRUE)
 datalabel$name <- substr(datalabel$nameor2,datalabel$find2 +1, 200)
+
 datalabel <- join(x=datalabel, y=survey_temp1, by="name", type = "left")
-datalabel <- join(x=datalabel, y=choices, by="name", type = "left")
-names(datalabel)[11] <- "label2"
+datalabel <- join(x=datalabel, y=choices1, by="name", type = "left")
+names(datalabel)[9] <- "label2"
 datalabel$label <- with(datalabel,  ifelse(is.na(datalabel$label),  paste0(datalabel$label2), datalabel$label) )
 
 ### Clean variable name to avoid special characters
@@ -120,9 +125,8 @@ datalabel$nameor2 <- str_replace_all(datalabel$nameor2, "-", ".")
 
 ## let's recode the variable of the dataset  Reinputing the label
 # names(datalabel)
-attributes(data)$variable.labels <- datalabel[, 10] 
+attributes(data)$variable.labels <- datalabel[, 8] 
 #for (i in 1:46 ) { var_label(data)[i] <- attributes(data)$variable.labels[i]  }
-
 names(data)<- datalabel[, 5] 
 
 
@@ -153,8 +157,7 @@ datasp <-data[( data$.store.gps.longitude > 35.7270 &
 ## Function to keep the Variable Label
 copy_labels(data, datasp)
 
-names(datasp)[1] <- "long"
-names(datasp)[2]  <- "lat"
+
 datasp <- as.data.frame(datasp)
 
 ## Now we can try to restore the Labels
@@ -162,8 +165,10 @@ datasp <- as.data.frame(datasp)
 datalabel2 <- as.data.frame( names(datasp))
 names(datalabel2)[1]  <- "nameor2"
 datalabel2 <- join(x=datalabel2, y=datalabel, by="nameor2", type = "left")
+attributes(datasp)$variable.labels <- datalabel2[, 8] 
 
-attributes(datasp)$variable.labels <- datalabel2[, 10] 
+names(datasp)[1] <- "long"
+names(datasp)[2]  <- "lat"
 
 ############
 ## ### Now we recode all variables through a loop
@@ -178,7 +183,9 @@ for (i in 10:57 ) {
 datasp$ratio.staff.benef <- datasp$staff/datasp$benef
 datasp$ratio.hardware.staff <- datasp$hardware/datasp$staff
 
-str(datasp)
+#str(datasp)
+
+rm(datalabel,datalabel2,datalabel1,datalabel11,choices,choices1,survey,survey_temp1, form_tmp, i)
 
 ############################################
 ##############################
